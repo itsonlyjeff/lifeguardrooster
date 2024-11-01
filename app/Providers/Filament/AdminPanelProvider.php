@@ -2,13 +2,11 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\EditProfile;
 use App\Http\Middleware\ApplyTenantScopes;
 use App\Models\Tenant;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -22,32 +20,29 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class AppPanelProvider extends PanelProvider
+class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
-            ->id('app')
-            ->path('app')
+            ->id('admin')
+            ->path('admin')
+            ->colors([
+                'primary' => Color::Amber,
+            ])
             ->login()
             ->tenant(Tenant::class, slugAttribute: 'slug')
             ->tenantRoutePrefix('team')
             ->tenantMiddleware([
                 ApplyTenantScopes::class
             ], isPersistent: true)
-            ->userMenuItems([
-                'profile' => MenuItem::make()->url(fn(): string => EditProfile::getUrl())
-            ])
-            ->colors([
-                'primary' => Color::Amber,
-            ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
+            ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
+            ->discoverClusters(in: app_path('Filament/Admin/Clusters'), for: 'App\\Filament\\Admin\\Clusters')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
                 //
             ])
@@ -65,7 +60,7 @@ class AppPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->sidebarCollapsibleOnDesktop()
-            ->maxContentWidth('full');
+            ->maxContentWidth('full')
+            ->viteTheme('resources/css/filament/admin/theme.css');
     }
 }

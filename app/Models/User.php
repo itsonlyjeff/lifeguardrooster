@@ -2,16 +2,23 @@
 
 namespace App\Models;
 
+use Filament\Facades\Filament;
+use Filament\Models\Contracts\HasTenants;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Collection;
 
-class User extends Authenticatable implements FilamentUser, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, MustVerifyEmail, HasTenants
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasUuids;
@@ -61,4 +68,36 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             return false;
         }
     }
+
+    public function tenant(): BelongsToMany
+    {
+        return $this->belongsToMany(Tenant::class);
+    }
+
+    public function tenants(): BelongsToMany
+    {
+        return $this->belongsToMany(Tenant::class);
+    }
+
+    public function shiftschedules(): HasMany
+    {
+        return $this->hasMany(Shiftschedule::class);
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function getTenants(Panel $panel): Collection
+    {
+        return $this->tenants;
+    }
+
+    public function canAccessTenant(Model $tenant): bool
+    {
+        return $this->tenants()->whereKey($tenant)->exists();
+    }
+
+
 }

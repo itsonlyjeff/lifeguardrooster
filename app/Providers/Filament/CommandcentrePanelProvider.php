@@ -3,8 +3,6 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\EditProfile;
-use App\Http\Middleware\ApplyTenantScopes;
-use App\Models\Tenant;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -22,32 +20,22 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class AppPanelProvider extends PanelProvider
+class CommandcentrePanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
-            ->id('app')
-            ->path('app')
-            ->login()
-            ->tenant(Tenant::class, slugAttribute: 'slug')
-            ->tenantRoutePrefix('team')
-            ->tenantMiddleware([
-                ApplyTenantScopes::class
-            ], isPersistent: true)
-            ->userMenuItems([
-                'profile' => MenuItem::make()->url(fn(): string => EditProfile::getUrl())
-            ])
+            ->id('commandcentre')
+            ->path('commandcentre')
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverResources(in: app_path('Filament/Commandcentre/Resources'), for: 'App\\Filament\\Commandcentre\\Resources')
+            ->discoverPages(in: app_path('Filament/Commandcentre/Pages'), for: 'App\\Filament\\Commandcentre\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Commandcentre/Widgets'), for: 'App\\Filament\\Commandcentre\\Widgets')
             ->widgets([
                 //
             ])
@@ -65,7 +53,7 @@ class AppPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->sidebarCollapsibleOnDesktop()
-            ->maxContentWidth('full');
+            ->maxContentWidth('full')
+            ->spa();
     }
 }
