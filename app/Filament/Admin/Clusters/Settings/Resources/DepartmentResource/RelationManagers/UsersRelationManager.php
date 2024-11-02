@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Filament\Admin\Clusters\Settings\Resources\UserResource\RelationManagers;
+namespace App\Filament\Admin\Clusters\Settings\Resources\DepartmentResource\RelationManagers;
 
+use Filament\Forms;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class RolesRelationManager extends RelationManager
+class UsersRelationManager extends RelationManager
 {
-    protected static string $relationship = 'roles';
-    protected static ?string $title = 'Rollen';
-
-
+    protected static string $relationship = 'users';
 
     public function table(Table $table): Table
     {
@@ -24,13 +25,17 @@ class RolesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make(),
+                Tables\Actions\AttachAction::make()
+                    ->preloadRecordSelect()
+                    ->multiple(),
             ])
             ->actions([
                 Tables\Actions\DetachAction::make(),
             ])
             ->bulkActions([
-                //
+                Tables\Actions\BulkActionGroup::make([
+                    //
+                ]),
             ]);
     }
 }

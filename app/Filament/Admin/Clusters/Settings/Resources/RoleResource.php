@@ -51,7 +51,7 @@ class RoleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            Settings\Resources\RoleResource\RelationManagers\UsersRelationManager::class,
         ];
     }
 

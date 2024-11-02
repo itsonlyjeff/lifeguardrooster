@@ -52,7 +52,7 @@ class DepartmentResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            Settings\Resources\DepartmentResource\RelationManagers\UsersRelationManager::class,
         ];
     }
 

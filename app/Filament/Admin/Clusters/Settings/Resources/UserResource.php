@@ -6,11 +6,15 @@ use App\Filament\Admin\Clusters\Settings;
 use App\Filament\Admin\Resources\UserResource\Pages;
 use App\Filament\Admin\Resources\UserResource\RelationManagers;
 use App\Models\User;
+use Filament\Facades\Filament;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use SebastianBergmann\CodeCoverage\Driver\Selector;
 
 class UserResource extends Resource
 {
@@ -26,13 +30,10 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->label('Naam')
-                    ->required()
-                    ->maxLength(255),
+                    ->readOnly(),
                 Forms\Components\TextInput::make('email')
                     ->label('Email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
+                    ->readOnly(),
             ]);
     }
 
@@ -41,15 +42,25 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\BooleanColumn::make('is_active')
+                    ->label('Actief')
+                    ->getStateUsing(function (User $user) {
+                    return $user->tenants()->where('tenant_id', \Filament\Facades\Filament::getTenant()->id)->first()->pivot->is_active;
+                }),
+                Tables\Columns\BooleanColumn::make('is_admin')
+                    ->label('Administrator')
+                    ->getStateUsing(function (User $user) {
+                        return $user->tenants()->where('tenant_id', \Filament\Facades\Filament::getTenant()->id)->first()->pivot->is_admin;
+                    }),
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('email_verified_at')->dateTime('d-m-Y H:i:s'),
-                Tables\Columns\TextColumn::make('iban'),
+                Tables\Columns\TextColumn::make('masked_iban'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                //
             ])
             ->bulkActions([
                 //
@@ -59,7 +70,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            \App\Filament\Admin\Clusters\Settings\Resources\UserResource\RelationManagers\RolesRelationManager::class,
+//            \App\Filament\Admin\Clusters\Settings\Resources\UserResource\RelationManagers\RolesRelationManager::class,
         ];
     }
 
@@ -67,8 +78,7 @@ class UserResource extends Resource
     {
         return [
             'index' => \App\Filament\Admin\Clusters\Settings\Resources\UserResource\Pages\ListUsers::route('/'),
-            'create' => \App\Filament\Admin\Clusters\Settings\Resources\UserResource\Pages\CreateUser::route('/create'),
-            'edit' => \App\Filament\Admin\Clusters\Settings\Resources\UserResource\Pages\EditUser::route('/{record}/edit'),
+            'view' => \App\Filament\Admin\Clusters\Settings\Resources\UserResource\Pages\ViewUser::route('/{record}'),
         ];
     }
 }

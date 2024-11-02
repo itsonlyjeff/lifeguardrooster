@@ -111,6 +111,7 @@ class ShiftResource extends Resource
     {
         return [
             RelationManagers\ShiftSchedulesRelationManager::class,
+            RelationManagers\AvailabilitiesRelationManager::class,
         ];
     }
 

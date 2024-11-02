@@ -31,4 +31,9 @@ class Shift extends Model
         return $this->belongsTo(ShiftType::class);
     }
 
+    public function availabilities(): HasMany
+    {
+        return $this->hasMany(Availability::class);
+    }
+
 }

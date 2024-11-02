@@ -59,7 +59,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
     public function getIbanAttribute($value): string|false
     {
         if ($value === null) {
-            return false;
+            return '';
         }
 
         try {
@@ -69,6 +69,17 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         }
     }
 
+    public function getMaskedIbanAttribute(): string
+    {
+        $iban = $this->iban; //
+
+        if ($iban === null || strlen($iban) <= 10) {
+            return $iban;
+        }
+
+        return substr($iban, 0, 10).str_repeat('*', strlen($iban) - 10);
+    }
+
     public function tenant(): BelongsToMany
     {
         return $this->belongsToMany(Tenant::class);
@@ -76,7 +87,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
 
     public function tenants(): BelongsToMany
     {
-        return $this->belongsToMany(Tenant::class);
+        return $this->belongsToMany(Tenant::class)->withPivot('is_active', 'is_admin')->withTimestamps();
     }
 
     public function shiftschedules(): HasMany
@@ -87,6 +98,16 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function departments(): BelongsToMany
+    {
+        return $this->belongsToMany(Department::class, 'department_user')->withTimestamps();
+    }
+
+    public function availabilities(): HasMany
+    {
+        return $this->hasMany(Availability::class);
     }
 
     public function getTenants(Panel $panel): Collection

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->dateTime('end');
             $table->dateTime('start_scheduling')->nullable();
             $table->string('name');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

@@ -1,20 +1,25 @@
 <?php
 
-namespace App\Filament\Commandcentre\Resources\TenantResource\RelationManagers;
+namespace App\Filament\Commandcentre\Resources;
 
+use App\Filament\Commandcentre\Resources\UserResource\Pages;
+use App\Filament\Commandcentre\Resources\UserResource\RelationManagers;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class UsersRelationManager extends RelationManager
+class UserResource extends Resource
 {
-    protected static string $relationship = 'users';
+    protected static ?string $model = User::class;
 
-    public function form(Form $form): Form
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -25,24 +30,21 @@ class UsersRelationManager extends RelationManager
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Toggle::make('is_active'),
-                Forms\Components\Toggle::make('is_admin'),
+                Forms\Components\TextInput::make('iban')
+                    ->nullable()
+                    ->maxLength(255),
+
             ]);
     }
 
-    public function table(Table $table): Table
+    public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('email_verified_at')->dateTime('d-m-Y H:i:s'),
                 Tables\Columns\TextColumn::make('masked_iban'),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('is_admin')
-                    ->boolean(),
                 Tables\Columns\TextColumn::make('tenants.name')
                     ->badge()
                     ->separator(','),
@@ -52,14 +54,29 @@ class UsersRelationManager extends RelationManager
             ->filters([
                 //
             ])
-            ->headerActions([
-                Tables\Actions\AttachAction::make(),
-            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                //
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListUsers::route('/'),
+            'create' => Pages\CreateUser::route('/create'),
+            'edit' => Pages\EditUser::route('/{record}/edit'),
+        ];
     }
 }

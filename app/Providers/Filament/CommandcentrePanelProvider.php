@@ -30,6 +30,7 @@ class CommandcentrePanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->login()
             ->discoverResources(in: app_path('Filament/Commandcentre/Resources'), for: 'App\\Filament\\Commandcentre\\Resources')
             ->discoverPages(in: app_path('Filament/Commandcentre/Pages'), for: 'App\\Filament\\Commandcentre\\Pages')
             ->pages([

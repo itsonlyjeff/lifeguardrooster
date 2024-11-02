@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignUuid('tenant_id')->constrained('tenants')->cascadeOnUpdate()->cascadeOnDelete();
             $table->boolean('is_active')->default(false);
             $table->boolean('is_admin')->default(false);
+            $table->timestamps();
         });
     }
 
