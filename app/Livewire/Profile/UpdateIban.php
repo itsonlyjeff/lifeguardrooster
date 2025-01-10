@@ -9,10 +9,12 @@ use Livewire\Component;
 class UpdateIban extends Component
 {
     public string $iban;
+    public string $iban_tnv;
 
     public function mount(): void
     {
         $this->iban = Auth::user()->iban;
+        $this->iban_tnv = Auth::user()->iban_tnv ? Auth::user()->iban_tnv : '';
     }
 
     public function updateIban(): void
@@ -21,10 +23,12 @@ class UpdateIban extends Component
 
         $validated = $this->validate([
             'iban' => ['required', 'string', new ValidIban()],
+            'iban_tnv' => ['required', 'string'],
         ]);
 
         $user->fill([
             'iban' => $validated['iban'],
+            'iban_tnv' => $validated['iban_tnv'],
         ])->save();
 
         $this->dispatch('iban-updated', name: $user->iban);

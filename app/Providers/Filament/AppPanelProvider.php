@@ -32,7 +32,6 @@ class AppPanelProvider extends PanelProvider
             ->path('app')
             ->login()
             ->tenant(Tenant::class, slugAttribute: 'slug')
-            ->tenantRoutePrefix('team')
             ->tenantMiddleware([
                 ApplyTenantScopes::class
             ], isPersistent: true)
@@ -40,6 +39,7 @@ class AppPanelProvider extends PanelProvider
                 'profile' => MenuItem::make()->url(fn(): string => EditProfile::getUrl())
             ])
             ->colors([
+
                 'primary' => Color::Amber,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
@@ -66,6 +66,9 @@ class AppPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->sidebarCollapsibleOnDesktop()
-            ->maxContentWidth('full');
+            ->maxContentWidth('full')
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
+            ->viteTheme('resources/css/filament/app/theme.css');
     }
 }

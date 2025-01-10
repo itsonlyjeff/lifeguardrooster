@@ -44,7 +44,8 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('email_verified_at')->dateTime('d-m-Y H:i:s'),
-                Tables\Columns\TextColumn::make('masked_iban'),
+                Tables\Columns\TextColumn::make('iban_tnv')->label('Tenaamstelling'),
+                Tables\Columns\TextColumn::make('masked_iban')->label('IBAN'),
                 Tables\Columns\TextColumn::make('tenants.name')
                     ->badge()
                     ->separator(','),

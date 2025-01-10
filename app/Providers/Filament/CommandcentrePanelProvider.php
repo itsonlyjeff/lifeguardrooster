@@ -55,6 +55,8 @@ class CommandcentrePanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->maxContentWidth('full')
-            ->spa();
+            ->spa()
+            ->viteTheme('resources/css/filament/commandcentre/theme.css');
+
     }
 }

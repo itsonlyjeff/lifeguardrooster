@@ -24,19 +24,6 @@ class UserResource extends Resource
 
     protected static ?string $cluster = Settings::class;
 
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->label('Naam')
-                    ->readOnly(),
-                Forms\Components\TextInput::make('email')
-                    ->label('Email')
-                    ->readOnly(),
-            ]);
-    }
-
     public static function table(Table $table): Table
     {
         return $table
@@ -54,7 +41,8 @@ class UserResource extends Resource
                     }),
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('email_verified_at')->dateTime('d-m-Y H:i:s'),
-                Tables\Columns\TextColumn::make('masked_iban'),
+                Tables\Columns\TextColumn::make('iban_tnv')->label('Tenaamstelling'),
+                Tables\Columns\TextColumn::make('masked_iban')->label('IBAN'),
             ])
             ->filters([
                 //

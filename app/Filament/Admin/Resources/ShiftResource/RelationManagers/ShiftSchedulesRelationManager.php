@@ -7,6 +7,7 @@ use App\Models\User;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -36,6 +37,8 @@ class ShiftSchedulesRelationManager extends RelationManager
                     ->default(0)
                     ->numeric()
                     ->prefix('€'),
+                Textarea::make('remarks')
+                    ->label('Opmerkingen'),
 
             ]);
     }
@@ -51,6 +54,8 @@ class ShiftSchedulesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('amount')
                     ->label("Vergoeding")
                     ->money('eur'),
+                Tables\Columns\TextColumn::make('remarks')
+                    ->label('Opmerkingen'),
             ])
             ->filters([
                 //

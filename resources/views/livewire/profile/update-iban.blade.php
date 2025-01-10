@@ -11,10 +11,15 @@
 
     <form wire:submit="updateIban" class="mt-6 space-y-6">
         <div>
+            <x-input-label for="iban" :value="__('Tenaamstelling')" />
+            <x-text-input wire:model="iban_tnv" id="iban_tnv" name="iban_tnv" type="text" class="mt-1 block w-full" required autocomplete="iban_tnv" />
+            <x-input-error class="mt-2" :messages="$errors->get('iban_tnv')" />
+        </div>
+
+        <div>
             <x-input-label for="iban" :value="__('Iban nummer')" />
             <x-text-input wire:model="iban" id="iban" name="iban" type="text" class="mt-1 block w-full" required autocomplete="iban" />
             <x-input-error class="mt-2" :messages="$errors->get('iban')" />
-
         </div>
 
         <div class="flex items-center gap-4">

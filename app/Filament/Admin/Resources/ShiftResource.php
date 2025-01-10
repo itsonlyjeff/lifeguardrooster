@@ -11,6 +11,7 @@ use App\Models\ShiftType;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -59,6 +60,12 @@ class ShiftResource extends Resource
                 ->label('Soort dienst')
                 ->required()
                 ->options(ShiftType::where('tenant_id', Filament::getTenant()->id)->pluck('name', 'id')),
+            SpatieMediaLibraryFileUpload::make('attachments')
+                ->disk('local')
+                ->collection('attachments')
+                ->multiple()
+                ->nullable()
+                ->label('Bijlagen'),
 
         ];
 

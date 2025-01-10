@@ -19,6 +19,7 @@ class AvailabilitiesRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Toggle::make('available'),
+                Forms\Components\Textarea::make('notes'),
             ]);
     }
 
@@ -30,6 +31,7 @@ class AvailabilitiesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('user.name'),
                 Tables\Columns\IconColumn::make('available')
                     ->boolean(),
+                Tables\Columns\TextColumn::make('notes'),
                 Tables\Columns\TextColumn::make('created_at'),
                 Tables\Columns\TextColumn::make('updated_at'),
             ])

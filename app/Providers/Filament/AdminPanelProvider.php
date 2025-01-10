@@ -32,7 +32,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->login()
             ->tenant(Tenant::class, slugAttribute: 'slug')
-            ->tenantRoutePrefix('team')
             ->tenantMiddleware([
                 ApplyTenantScopes::class
             ], isPersistent: true)

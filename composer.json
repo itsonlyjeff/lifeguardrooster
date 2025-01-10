@@ -9,15 +9,18 @@
         "ext-calendar": "*",
         "blade-ui-kit/blade-icons": "^1.7",
         "filament/filament": "^3.2",
+        "filament/spatie-laravel-media-library-plugin": "^3.2",
         "khatabwedaa/blade-css-icons": "^1.4",
         "laravel/framework": "^11.9",
         "laravel/horizon": "^5.29",
+        "laravel/octane": "^2.6",
         "laravel/tinker": "^2.9",
-        "opcodesio/log-viewer": "^3.11"
+        "opcodesio/log-viewer": "^3.11",
+        "spatie/calendar-links": "^1.11",
+        "spatie/laravel-medialibrary": "^11.11"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",
-        "beyondcode/laravel-query-detector": "^2.0",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.1",
         "laravel/pint": "^1.13",

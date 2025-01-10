@@ -31,6 +31,10 @@ class ViewUser extends ViewRecord
                         ->copyable()
                         ->copyMessage('Gekopieerd!')
                         ->copyMessageDuration(1500),
+                    TextEntry::make('iban_tnv')
+                        ->label('Tenaamstelling')
+                        ->icon('heroicon-m-currency-euro')
+                        ->iconColor('primary'),
                     TextEntry::make('masked_iban')
                         ->label('IBAN')
                         ->icon('heroicon-m-currency-euro')
