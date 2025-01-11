@@ -3,8 +3,10 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\EditProfile;
+use App\Filament\Pages\Tenancy\TenantRegistration;
 use App\Http\Middleware\ApplyTenantScopes;
 use App\Models\Tenant;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -13,7 +15,6 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -31,12 +32,14 @@ class AppPanelProvider extends PanelProvider
             ->id('app')
             ->path('app')
             ->login()
+            ->registration()
+            ->emailVerification()
             ->tenant(Tenant::class, slugAttribute: 'slug')
             ->tenantMiddleware([
                 ApplyTenantScopes::class
             ], isPersistent: true)
             ->userMenuItems([
-                'profile' => MenuItem::make()->url(fn(): string => EditProfile::getUrl())
+                'profile' => MenuItem::make()->url(fn(): string => EditProfile::getUrl())->hidden(Filament::getTenant() === null),
             ])
             ->colors([
 
