@@ -3,6 +3,8 @@
 namespace App\Filament\Pages;
 
 use App\Models\Shift;
+use App\Models\User;
+use App\Notifications\CommentAddedToShiftNotification;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Infolists\Components\Actions\Action;
@@ -33,7 +35,7 @@ class ViewShift extends Page implements HasForms, HasInfolists
 
     public function mount($id)
     {
-        $this->shift = Shift::findOrFail($id)->loadMissing(['comments.sender']);
+        $this->shift = Shift::findOrFail($id)->loadMissing(['comments.sender', 'shiftSchedules.user', 'shiftSchedules.role']);
         $this->comments = $this->shift->comments->toArray();
     }
 
@@ -55,6 +57,12 @@ class ViewShift extends Page implements HasForms, HasInfolists
                         'sm' => 3,
                         'xl' => 4,
                         '2xl' => 6,
+                    ]),
+
+                Section::make('Rooster')
+                    ->schema([
+                        ViewEntry::make('rooster')
+                            ->view('filament.infolist-entry.planned-users', ['users' => $this->shift->shiftSchedules->load(['user', 'role'])])
                     ]),
 
                 Section::make('Bijlagen')
@@ -80,6 +88,21 @@ class ViewShift extends Page implements HasForms, HasInfolists
                                 ]);
 
                                 array_unshift($this->comments, $comment->load('sender')->toArray());
+
+                                $admins = User::whereRelation('tenants', 'is_admin', true)->get();
+
+                                $users = $this->shift->shiftSchedules()
+                                    ->with(['user'])
+                                    ->get()
+                                    ->pluck('user')
+                                    ->filter()
+                                    ->unique();
+
+                                $allUsers = $admins->merge($users)->unique('id');
+
+                                foreach ($allUsers as $user) {
+                                    $user->notify(new CommentAddedToShiftNotification($comment, $this->shift));
+                                }
 
                                 Notification::make()
                                     ->title('Reactie is toegevoegd')

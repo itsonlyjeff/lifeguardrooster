@@ -10,4 +10,6 @@ class Planner extends Page
 
     protected static string $view = 'filament.pages.planner';
 
+    protected static ?string $navigationGroup = 'Rooster';
+
 }

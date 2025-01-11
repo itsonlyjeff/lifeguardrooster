@@ -15,7 +15,6 @@ class AvailabilityList extends Page
 
     protected static ?string $navigationLabel = 'Beschikbaarheid';
     protected static ?string $title = 'Beschikbaarheid';
-    protected static ?string $navigationGroup = 'Rooster';
 
     public static function getNavigationBadge(): ?string
     {
