@@ -48,7 +48,23 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+//        dd($panel);
+        if ($panel->getId() === 'app')
+        {
+            return true;
+        }
+
+        if ($panel->getId() === 'admin')
+        {
+            return $this->tenants()->wherePivot('is_admin', true)->exists();
+        }
+
+        if($panel->getId() === 'commandcentre')
+        {
+            return $this->is_sys_admin;
+        }
+
+        return false;
     }
 
     public function setIbanAttribute($value): void

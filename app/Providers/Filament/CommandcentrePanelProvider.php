@@ -2,11 +2,13 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Commandcentre\Pages\HealthCheckResults;
 use App\Filament\Pages\EditProfile;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -19,6 +21,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use ShuvroRoy\FilamentSpatieLaravelHealth\FilamentSpatieLaravelHealthPlugin;
 
 class CommandcentrePanelProvider extends PanelProvider
 {
@@ -53,6 +56,36 @@ class CommandcentrePanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->navigationItems([
+                NavigationItem::make('Log Viewer')
+                    ->url(config('app.url').'/log-viewer')
+                    ->icon('heroicon-o-information-circle')
+                    ->group('Monitoring')
+                    ->sort(3)
+                    ->openUrlInNewTab(true),
+                NavigationItem::make('Pulse')
+                    ->url(config('app.url').'/pulse')
+                    ->icon('heroicon-o-tag')
+                    ->group('Monitoring')
+                    ->sort(3)
+                    ->openUrlInNewTab(true),
+                NavigationItem::make('Horizon')
+                    ->url(config('app.url').'/horizon')
+                    ->icon('heroicon-o-queue-list')
+                    ->group('Monitoring')
+                    ->sort(3)
+                    ->openUrlInNewTab(true),
+                NavigationItem::make('Telescope')
+                    ->url(config('app.url').'/telescope')
+                    ->icon('heroicon-o-beaker')
+                    ->group('Monitoring')
+                    ->sort(3)
+                    ->openUrlInNewTab(true),
+            ])
+            ->plugins([
+                FilamentSpatieLaravelHealthPlugin::make()
+                    ->usingPage(HealthCheckResults::class),
             ])
             ->maxContentWidth('full')
             ->spa()

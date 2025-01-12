@@ -11,7 +11,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Spatie\CalendarLinks\Link;
 
-class UserIsPlannedNotification extends Notification
+class UserIsPlannedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

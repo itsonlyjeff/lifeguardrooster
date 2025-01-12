@@ -14,10 +14,17 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Database\Eloquent\Model;
 
 class ViewUser extends ViewRecord
 {
     protected static string $resource = UserResource::class;
+
+    public function mount(string|int $record): void
+    {
+        parent::mount($record); // Zorgt dat $this->record wordt geladen
+        $this->record->load(['tenants', 'roles.tenant', 'departments.tenant']); // Laad de relaties vooraf
+    }
 
     public function infolist(Infolist $infolist): Infolist
     {
@@ -66,15 +73,17 @@ class ViewUser extends ViewRecord
                         ->hiddenLabel()
                         ->schema([
                             TextEntry::make('name')->label('Naam'),
+                            TextEntry::make('tenant.name')->hiddenLabel()->badge(true),
                         ])->grid(2),
                 ])->columnSpanFull(),
                 Fieldset::make('Afdelingen')->schema([
                     RepeatableEntry::make('departments')
-                    ->hiddenLabel()
-                    ->schema([
-                        TextEntry::make('name')->label('Naam'),
-                    ])->grid(2)
-            ])->columnSpanFull(),
+                        ->hiddenLabel()
+                        ->schema([
+                            TextEntry::make('name')->label('Naam'),
+                            TextEntry::make('tenant.name')->hiddenLabel()->badge(true),
+                        ])->grid(2)
+                ])->columnSpanFull(),
             ]);
     }
 
@@ -110,14 +119,12 @@ class ViewUser extends ViewRecord
                 ->requiresConfirmation()
                 ->hidden(function ($record) {
                     $tenant = Filament::getTenant()->id;
-                    $user = $record;
                     $pivot = $record->tenants()->where('tenant_id', $tenant)->first()->pivot;
 
                     return $pivot->is_active;
                 })
                 ->action(function ($record) {
                     $tenant = Filament::getTenant()->id;
-                    $user = $record;
                     $pivot = $record->tenants()->where('tenant_id', $tenant)->first()->pivot;
 
                     $pivot->is_active = true;

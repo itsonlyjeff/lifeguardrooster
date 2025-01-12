@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\EditProfile;
 use App\Filament\Pages\Tenancy\TenantRegistration;
 use App\Http\Middleware\ApplyTenantScopes;
+use App\Http\Middleware\CheckIfUserHasApprovedTenant;
 use App\Models\Tenant;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
@@ -34,12 +35,21 @@ class AppPanelProvider extends PanelProvider
             ->login()
             ->registration()
             ->emailVerification()
+            ->passwordReset()
             ->tenant(Tenant::class, slugAttribute: 'slug')
             ->tenantMiddleware([
                 ApplyTenantScopes::class
             ], isPersistent: true)
             ->userMenuItems([
-                'profile' => MenuItem::make()->url(fn(): string => EditProfile::getUrl())->hidden(Filament::getTenant() === null),
+//                'profile' => MenuItem::make()->url(fn(): string => EditProfile::getUrl())->hidden(null !== Filament::getTenant()),
+                'profile' => MenuItem::make()->url(function (): string {
+                    if (Filament::getTenant()) {
+                        return EditProfile::getUrl();
+                    }
+
+                    return route('filament.app.tenant');
+
+                })
             ])
             ->colors([
 
@@ -64,9 +74,11 @@ class AppPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+
             ])
             ->authMiddleware([
                 Authenticate::class,
+                CheckIfUserHasApprovedTenant::class,
             ])
             ->sidebarCollapsibleOnDesktop()
             ->maxContentWidth('full')

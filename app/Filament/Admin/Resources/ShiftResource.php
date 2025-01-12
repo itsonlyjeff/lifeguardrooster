@@ -10,8 +10,10 @@ use App\Models\ShiftTemplate;
 use App\Models\ShiftType;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -60,6 +62,18 @@ class ShiftResource extends Resource
                 ->label('Soort dienst')
                 ->required()
                 ->options(ShiftType::where('tenant_id', Filament::getTenant()->id)->pluck('name', 'id')),
+            RichEditor::make('description')
+                ->toolbarButtons([
+                    'bold',
+                    'bulletList',
+                    'italic',
+                    'orderedList',
+                    'redo',
+                    'strike',
+                    'underline',
+                ])
+                ->label('Beschrijving')
+                ->nullable(),
             SpatieMediaLibraryFileUpload::make('attachments')
                 ->disk('local')
                 ->collection('attachments')

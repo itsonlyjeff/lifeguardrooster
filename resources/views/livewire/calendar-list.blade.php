@@ -4,7 +4,7 @@
 
     <div class="flex flex-col">
         @forelse($shifts as $shift)
-            <div class="flex flex-col md:flex-row justify-between hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+            <a href="{{ route('filament.app.pages.shift.{id}', ['tenant' => \Filament\Facades\Filament::getTenant(), 'id' => $shift->id]) }}" class="flex flex-col md:flex-row justify-between hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
                 <div class="">
                     <div class="font-bold">
                         {{ $shift->name }}
@@ -37,7 +37,7 @@
                 </div>
 
                 <table>
-                    @foreach($shift->shiftschedules as $schedule)
+                    @foreach($shift->shiftSchedules as $schedule)
                         <tr class="align-top">
                             <td class="w-60 font-semibold">
                                 <span>{{ ucfirst($schedule->role->name) }}</span><br />
@@ -56,7 +56,7 @@
                     @endforeach
                 </table>
 
-            </div>
+            </a>
             <hr class="my-2"/>
         @empty
             <div class="p-10 flex flex-col items-center justify-center w-full">

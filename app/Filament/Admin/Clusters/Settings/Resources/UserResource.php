@@ -28,7 +28,8 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Naam'),
                 Tables\Columns\BooleanColumn::make('is_active')
                     ->label('Actief')
                     ->getStateUsing(function (User $user) {
@@ -40,7 +41,7 @@ class UserResource extends Resource
                         return $user->tenants()->where('tenant_id', \Filament\Facades\Filament::getTenant()->id)->first()->pivot->is_admin;
                     }),
                 Tables\Columns\TextColumn::make('email'),
-                Tables\Columns\TextColumn::make('email_verified_at')->dateTime('d-m-Y H:i:s'),
+                Tables\Columns\TextColumn::make('email_verified_at')->label('Email bevestigd op')->dateTime('d-m-Y H:i:s'),
                 Tables\Columns\TextColumn::make('iban_tnv')->label('Tenaamstelling'),
                 Tables\Columns\TextColumn::make('masked_iban')->label('IBAN'),
             ])

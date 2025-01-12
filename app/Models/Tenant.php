@@ -45,4 +45,9 @@ class Tenant extends Model
     {
         return $this->hasMany(ShiftTemplateSchedules::class);
     }
+
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(Expense::class);
+    }
 }

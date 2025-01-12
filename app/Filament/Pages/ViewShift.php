@@ -35,7 +35,15 @@ class ViewShift extends Page implements HasForms, HasInfolists
 
     public function mount($id)
     {
-        $this->shift = Shift::findOrFail($id)->loadMissing(['comments.sender', 'shiftSchedules.user', 'shiftSchedules.role']);
+        $this->shift = Shift::findOrFail($id)->loadMissing([
+            'comments.sender',
+            'shiftSchedules' => function ($query) {
+                $query->where('is_cancelled', false); // Alleen niet geannuleerde shiftSchedules laden
+            },
+            'shiftSchedules.user',
+            'shiftSchedules.role',
+        ]);
+
         $this->comments = $this->shift->comments->toArray();
     }
 
@@ -51,7 +59,11 @@ class ViewShift extends Page implements HasForms, HasInfolists
                         TextEntry::make('shiftType.name')->label('Type dienst')->badge(),
                         TextEntry::make('start')->date('d-m-Y H:i')->label('Start dienst')->icon('heroicon-o-calendar-days')->iconColor('primary'),
                         TextEntry::make('end')->date('d-m-Y H:i')->label('Einde dienst')->icon('heroicon-o-calendar-days')->iconColor('primary'),
-                        TextEntry::make('description')->label('Omschrijving')->columnSpanFull()->hidden(!$this->shift->description),
+                        TextEntry::make('description')
+                            ->view('filament.infolist-entry.description-view')
+                            ->label('Omschrijving')
+                            ->columnSpanFull()
+                            ->hidden(!$this->shift->description),
                     ])
                     ->columns([
                         'sm' => 3,

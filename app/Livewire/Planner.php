@@ -25,7 +25,16 @@ class Planner extends Component
     public function loadData()
     {
         $this->departments = Department::where('tenant_id', $this->tenant->id)->get();
-        $this->shifts = Shift::with(['shiftschedules.user', 'shiftschedules.role', 'shiftType'])->where('tenant_id', $this->tenant->id)->get();
+        $this->shifts = Shift::with([
+            'shiftschedules' => function ($query) {
+                $query->where('is_cancelled', false);
+            },
+            'shiftschedules.user',
+            'shiftschedules.role',
+            'shiftType'
+        ])
+            ->where('tenant_id', $this->tenant->id)
+            ->get();
     }
 
     public function previousWeek()
