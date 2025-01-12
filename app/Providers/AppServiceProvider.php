@@ -115,6 +115,7 @@ class AppServiceProvider extends ServiceProvider
     private function setupGates(): void
     {
         Gate::define('viewPulse', function () {
+            dd(optional(auth()->user())->is_sys_admin);
             return optional(auth()->user())->is_sys_admin ?? false;
         });
 
