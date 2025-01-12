@@ -116,11 +116,11 @@ class AppServiceProvider extends ServiceProvider
     private function setupGates(): void
     {
         Gate::define('viewPulse', function (User $user) {
-            return $user->is_sys_admin ?? false;
+            return $user->is_sys_admin;
         });
 
         Gate::define('viewLogViewer', function (User $user) {
-            return $user->is_sys_admin ?? false;
+            return $user->is_sys_admin;
         });
     }
 }
