@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
@@ -114,13 +115,12 @@ class AppServiceProvider extends ServiceProvider
 
     private function setupGates(): void
     {
-        Gate::define('viewPulse', function () {
-            dd(optional(auth()->user())->is_sys_admin);
-            return optional(auth()->user())->is_sys_admin ?? false;
+        Gate::define('viewPulse', function (User $user) {
+            return $user->is_sys_admin ?? false;
         });
 
-        Gate::define('viewLogViewer', function () {
-            return optional(auth()->user())->is_sys_admin ?? false;
+        Gate::define('viewLogViewer', function (User $user) {
+            return $user->is_sys_admin ?? false;
         });
     }
 }
