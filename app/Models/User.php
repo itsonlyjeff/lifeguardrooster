@@ -43,6 +43,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_sys_admin' => 'boolean',
         ];
     }
 
