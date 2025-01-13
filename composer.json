@@ -23,7 +23,9 @@
         "spatie/cpu-load-health-check": "^1.0",
         "spatie/laravel-health": "^1.31",
         "spatie/laravel-medialibrary": "^11.11",
-        "spatie/security-advisories-health-check": "^1.2"
+        "spatie/security-advisories-health-check": "^1.2",
+        "digitick/sepa-xml": "^2.2",
+        "maatwebsite/excel": "^3.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",
