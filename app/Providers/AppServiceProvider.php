@@ -117,12 +117,12 @@ class AppServiceProvider extends ServiceProvider
     {
         $authorizedEmails = config('gates.authorized_emails');
 
-        Gate::define('viewPulse', function (?User $user) use ($authorizedEmails) {
-            return $user && in_array($user->email, $authorizedEmails);
+        Gate::define('viewPulse', function (?User $user) {
+            return $user->is_sys_admin;
         });
 
-        Gate::define('viewLogViewer', function (?User $user) use ($authorizedEmails) {
-            return $user && in_array($user->email, $authorizedEmails);
+        Gate::define('viewLogViewer', function (?User $user) {
+            return $user->is_sys_admin;
         });
     }
 }
